@@ -148,7 +148,6 @@ public:
             while(connect_socket = accept(mSocket->socket,(sockaddr*)&connect_addr,&connect_addr_size))
             #endif
             {
-                //Sleep(10);
                 ModelSocket *connectSocket = new ModelSocket();
                 connectSocket->socket=connect_socket;
                 connectSocket->sockaddr=connect_addr;
@@ -168,7 +167,7 @@ public:
                     exit(0);
                 }
                 #endif
-
+                
                 vConnection.push_back(connectSocket);
 
 				printf("%s", inet_ntoa(vConnection[vConnection.size()-1]->sockaddr.sin_addr));
@@ -356,20 +355,22 @@ public:
                 if(rb==0){CloseSocket(connectSocket);}
             }
 
-            //if(rb>=0) //for Windows
-            if(rb>0) //for Unix
+            static std::string state_print = "print";
+            
+            #if TARGET_PLATFORM == PLATFORM_WINDOWS
+            if(rb>=0)
+            #endif
+            #if TARGET_PLATFORM == PLATFORM_UNIX
+            if(rb>0) 
+            #endif
             {
                 connectSocket->cstr[rb]=0; //clear after rb
 
-                printf("%s", inet_ntoa(connectSocket->sockaddr.sin_addr));
-				printf(": %d", ntohs(connectSocket->sockaddr.sin_port));
-                printf(": %s\n",connectSocket->cstr);
-
-                //if(RegexHttp(connectSocket->cstr,"HTTP") == 1)
-                //{
-                //    printf("    HTTP HTTP HTTP ResponseHttp \n");
+                if(RegexHttp(connectSocket->cstr,"HTTP") == 1)
+                {
+                    state_print = "noprint";
                     ResponseHttp(connectSocket);
-                //}
+                }
 
                 if(strcmp(connectSocket->cstr,"disconnect") == 0)
                 {
@@ -386,14 +387,21 @@ public:
                     }
                 }
 
-                connectSocket->recvString=connectSocket->cstr;
+                if(state_print == "print")
+                {
+                    printf("%s", inet_ntoa(connectSocket->sockaddr.sin_addr));
+                    printf(": %d", ntohs(connectSocket->sockaddr.sin_port));
+                    printf(": %s\n",connectSocket->cstr);
 
-                mString.str=connectSocket->recvString;
-                Notify(mString);
+                    connectSocket->recvString=connectSocket->cstr;
 
-                strcpy(connectSocket->cstr, "");
-                connectSocket->recvStream.clear();
-                connectSocket->recvString.clear();
+                    mString.str=connectSocket->recvString;
+                    Notify(mString);
+
+                    strcpy(connectSocket->cstr, "");
+                    connectSocket->recvStream.clear();
+                    connectSocket->recvString.clear();
+                }
             }
         }
     }
