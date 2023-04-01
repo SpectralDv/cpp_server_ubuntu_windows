@@ -499,6 +499,7 @@ public:
 
         response_body << "<link rel=icon href=data:;base64,=>"
             << "<title>spectrtaldev.ru</title>"
+            << "<style>body{background-color:#000;}</style>"
             << "<h1 style=color:green;text-align:center;margin-top:5em;>spectraldev.ru</h1>";
 
         response << "HTTP/1.1 200 OK\r\n"
