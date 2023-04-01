@@ -365,11 +365,11 @@ public:
 				printf(": %d", ntohs(connectSocket->sockaddr.sin_port));
                 printf(": %s\n",connectSocket->cstr);
 
-                if(RegexHttp(connectSocket->cstr,"HTTP") == 1)
-                {
-                    printf("    HTTP HTTP HTTP ResponseHttp \n");
+                //if(RegexHttp(connectSocket->cstr,"HTTP") == 1)
+                //{
+                //    printf("    HTTP HTTP HTTP ResponseHttp \n");
                     ResponseHttp(connectSocket);
-                }
+                //}
 
                 if(strcmp(connectSocket->cstr,"disconnect") == 0)
                 {
