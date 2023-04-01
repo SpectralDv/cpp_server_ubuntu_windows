@@ -1,3 +1,6 @@
+.vscode
+.gitignore
+
 # Prerequisites
 *.d
 
@@ -27,6 +30,7 @@
 *.lib
 
 # Executables
+webserver
 main
 *.exe
 *.out
